@@ -5,6 +5,7 @@ const scheduleRoutes = require('./routes/schedule');
 
 const app = express();
 const PORT = process.env.PORT || 8000;
+const VERIFY_TOKEN = process.env.VERIFY_TOKEN || '1';
 
 app.use(express.json());
 app.use('/auth', authRoutes);
@@ -12,7 +13,6 @@ app.use('/schedule', scheduleRoutes);
 
 // Webhook validation route for Facebook
 app.get('/webhook', (req, res) => {
-    const VERIFY_TOKEN = '1'; // Should match the token in Meta's webhook settings
     const mode = req.query['hub.mode'];
     const token = req.query['hub.verify_token'];
     const challenge = req.query['hub.challenge'];
@@ -28,7 +28,6 @@ app.get('/webhook', (req, res) => {
 app.get('/', (req, res) => {
     res.send('Webhook validated');
 });
-
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
